@@ -1,0 +1,13 @@
+{
+  "base_url": "/",
+  "hostname": "0.0.0.0",
+  "password": false,
+  "pid": 64081,
+  "port": 8888,
+  "root_dir": "/root/analysis",
+  "secure": false,
+  "sock": "",
+  "token": "",
+  "url": "http://44c32d4441b6:8888/",
+  "version": "2.14.2"
+}

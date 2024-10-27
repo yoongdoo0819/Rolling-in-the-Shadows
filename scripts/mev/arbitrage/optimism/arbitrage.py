@@ -885,7 +885,7 @@ def init_process(_prices, _coin_list, _cache):
     global session
 
     import random
-    provider = random.choice(OPTIMISM_PROVIDERS)
+    provider = random.choice(OPTIMISM_SEPOLIA_PROVIDER) # random.choice(OPTIMISM_PROVIDERS)
     w3 = Web3(provider)
     if w3.isConnected():
         client_version = w3.clientVersion
@@ -1005,7 +1005,8 @@ def main():
     print(block_ranges)
     print(len(block_ranges))
 
-    #block_ranges = [[106712436, 106712436]]
+    # block_ranges = [[106712436, 106712436]]
+    block_ranges = [[117400000, 125400000]]
 
     # Tests
     # Uniswap V3:  6446, 1057969

@@ -1103,6 +1103,7 @@ def main():
     print(len(block_ranges))
 
     #block_ranges = [[15049102, 15049102]]
+    block_ranges = [[19426589, 20745134]]
 
     # Tests
     # Uniswap V2:  15537426

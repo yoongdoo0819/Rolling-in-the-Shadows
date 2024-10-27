@@ -1,0 +1,13 @@
+{
+  "shell_port": 55359,
+  "iopub_port": 36447,
+  "stdin_port": 35121,
+  "control_port": 59089,
+  "hb_port": 59497,
+  "ip": "127.0.0.1",
+  "key": "a86346a7-4245a620281e65a8d0a9fa26",
+  "transport": "tcp",
+  "signature_scheme": "hmac-sha256",
+  "kernel_name": "python3",
+  "jupyter_session": "/root/analysis/5_3_2_transaction_inclusion_delays.ipynb"
+}

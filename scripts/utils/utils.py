@@ -38,6 +38,10 @@ def get_events_hash(w3,params):
             return None
 
 def get_events(w3, client_version, params, provider, network="ethereum", session=None):
+    fromBlock = params["fromBlock"]
+    toBlock = 0
+    lastBlock = params["toBlock"]
+    
     if ("geth" in client_version.lower() and network != "optimism") or network == "arbitrum":
         try:
             events = w3.eth.filter(params).get_all_entries()
@@ -57,33 +61,58 @@ def get_events(w3, client_version, params, provider, network="ethereum", session
         if session == None:
             session = requests.Session()
         try:
-            res = session.post(provider.endpoint_uri, json={
-                "jsonrpc": "2.0",
-                "method": "eth_getLogs",
-                "params": [
-                    {
-                        "fromBlock": hex(params["fromBlock"]),
-                        "toBlock": hex(params["toBlock"]),
-                        "topics": params["topics"],
-                    }
-                ],
-                "id": 1
-            })
-            if res.status_code == 200:
-                events = res.json()["result"]
-                for event in events:
-                    event["address"] =  Web3.toChecksumAddress(event["address"].lower())
-                    event["blockNumber"] = int(event["blockNumber"], 16)
-                    event["transactionIndex"] = int(event["transactionIndex"], 16)
-                    event["logIndex"] = int(event["logIndex"], 16)
-                return events
-            else:
-                print(colors.FAIL+"Error: Could not retrieve events: "+str(res.status_code)+" "+str(res.text)+" "+str(provider.endpoint_uri)+colors.END)
-                return None
+            events = []
+
+            while True:
+                toBlock = fromBlock + 50000
+
+                if toBlock >= lastBlock:
+                    toBlock = lastBlock
+
+                print("fromBlock", fromBlock, "toBlock", toBlock, "lastBlock", lastBlock, "toBlock - fromBlock", toBlock - fromBlock)
+                res = session.post(provider.endpoint_uri, json={
+                    "jsonrpc": "2.0",
+                    "method": "eth_getLogs",
+                    "params": [
+                        {
+                            # "fromBlock": hex(params["fromBlock"]),
+                            # "toBlock": hex(params["toBlock"]),
+                            "fromBlock": hex(fromBlock),
+                            "toBlock": hex(toBlock),
+                            "topics": params["topics"],
+                            "address": ["0x4533bAD2dc588F0faDf8d2E72386d4cD6A19B519"]
+                        }
+                    ],
+                    "id": 1
+                })
+                if res.status_code == 200:
+                    print(res.json())
+                    temp_events = res.json()["result"]
+                    print("temp_events", temp_events)
+                    for event in temp_events:
+                        event["address"] =  Web3.toChecksumAddress(event["address"].lower())
+                        event["blockNumber"] = int(event["blockNumber"], 10) # int(event["blockNumber"], 16)
+                        event["transactionIndex"] = int(event["transactionIndex"], 16)
+                        event["logIndex"] = int(event["logIndex"], 16)
+                        events.append(event)
+
+                    if toBlock == lastBlock:
+                        break
+                    # return events
+                else:
+                    print(colors.FAIL+"Error: Could not retrieve events: "+str(res.status_code)+" "+str(res.text)+" "+str(provider.endpoint_uri)+colors.END)
+                    return None
+                
+                fromBlock = toBlock + 1
+            return events
+        
         except Exception as e:
             print(colors.FAIL+str(traceback.format_exc())+colors.END)
             print(colors.FAIL+"Error: "+str(e)+colors.END)
             return None
+
+        
+
     else:
         print(colors.FAIL+"Error: Client/Network is not supported! Supported clients are Geth and Erigon! Supported networks are Ethereum, Optimism, Arbitrum, and zkSync! Client version: "+client_version+colors.END)
         return None

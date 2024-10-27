@@ -385,9 +385,17 @@ def analyze_block(block_range):
             end = time.time()
             return end - start
 
+        # latest_block = w3.eth.getBlock('latest')
+        # print("latest_block", latest_block)
+        # if block_number <= latest_block.number:
+        #     block = w3.eth.getBlock(block_number)
+        #     one_eth_to_usd_price = decimal.Decimal(float(get_price_from_timestamp(block["timestamp"], prices["eth_to_usd"])))
+        #     print(block)
+        # else:
+        #     print("해당 블록은 아직 생성되지 않았습니다.")
+        
         block = w3.eth.getBlock(block_number)
         one_eth_to_usd_price = decimal.Decimal(float(get_price_from_timestamp(block["timestamp"], prices["eth_to_usd"])))
-
         retrieved_flash_loans = False
         try:
             # Search for arbitrage
@@ -885,7 +893,7 @@ def init_process(_prices, _coin_list, _cache):
     global session
 
     import random
-    provider = random.choice(OPTIMISM_SEPOLIA_PROVIDER) # random.choice(OPTIMISM_PROVIDERS)
+    provider = OPTIMISM_PROVIDER # random.choice(OPTIMISM_PROVIDERS)
     w3 = Web3(provider)
     if w3.isConnected():
         client_version = w3.clientVersion

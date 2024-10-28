@@ -1013,9 +1013,8 @@ def main():
     print(block_ranges)
     print(len(block_ranges))
 
-    # block_ranges = [[106712436, 106712436]]
-    block_ranges = [[117400000, 125400000]]
-
+    # block_ranges = [[117400000, 125400000]] # 덴쿤 이후
+    block_ranges = [[127236365, 127256734]] # event 테스트
     # Tests
     # Uniswap V3:  6446, 1057969
 

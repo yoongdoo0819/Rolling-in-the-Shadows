@@ -26,7 +26,7 @@ CPUs = multiprocessing.cpu_count()
 
 BLOCK_RANGE = 1#100
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 # Decentralized Exchanges
 UNISWAP_V2          = "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822" # UNISWAP V2/Sushiswap (Swap)
@@ -81,6 +81,12 @@ def analyze_block(block_range):
         transaction_index_to_hash = dict()
 
         events = events_per_block[block_number]
+        if len(events) == 0:
+            continue
+        else:
+            print("block number", block_number)
+            print("events", events)
+
         try:
             # Search for Uniswap V2 swaps
             for event in events:
@@ -532,7 +538,7 @@ def analyze_block(block_range):
                                 arbitrages.append(arbitrage)
                                 intermediary_swaps = list()
                         if len(arbitrages) > 0:
-                            print()
+                            print("arbitrages len > 0")
                             if not retrieved_flash_loans:
                                 events = list()
                                 events += get_events(w3, client_version, {"fromBlock": block_number, "toBlock": block_number, "topics": [AAVE_V2_FLASH_LOAN]},  provider, "optimism", session)
@@ -839,7 +845,7 @@ def analyze_block(block_range):
                             try:
                                 if DEBUG_MODE:
                                     import pprint
-                                    pprint.pprint(finding)
+                                    print(">> ", finding)
                                 collection.insert_one(finding)
                             except pymongo.errors.DuplicateKeyError:
                                 pass
@@ -869,14 +875,14 @@ def analyze_block(block_range):
             return end - start
 
         end = time.time()
-        collection = mongo_connection["optimism"]["mev_arbitrage_status"]
-        try:
-            collection.insert_one({"block_number": block_number, "execution_time": end-start})
-        except pymongo.errors.DuplicateKeyError:
-            pass
-        # Indexing...
-        if 'block_number' not in collection.index_information():
-            collection.create_index('block_number', unique=True)
+        # collection = mongo_connection["optimism"]["mev_arbitrage_status"]
+        # try:
+        #     collection.insert_one({"block_number": block_number, "execution_time": end-start})
+        # except pymongo.errors.DuplicateKeyError:
+        #     pass
+        # # Indexing...
+        # if 'block_number' not in collection.index_information():
+        #     collection.create_index('block_number', unique=True)
 
     end = time.time()
     return end - start
@@ -1014,7 +1020,7 @@ def main():
     print(len(block_ranges))
 
     # block_ranges = [[117400000, 125400000]] # 덴쿤 이후
-    block_ranges = [[127236365, 127256734]] # event 테스트
+    block_ranges = [[127241617, 127241717]] # event 테스트
     # Tests
     # Uniswap V3:  6446, 1057969
 

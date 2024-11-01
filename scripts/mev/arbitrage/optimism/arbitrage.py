@@ -1019,8 +1019,8 @@ def main():
     print(block_ranges)
     print(len(block_ranges))
 
-    # block_ranges = [[117400000, 125400000]] # 덴쿤 이후
-    block_ranges = [[127241617, 127241717]] # event 테스트
+    block_ranges = [[117400000, 125400000]] # 덴쿤 이후 (seconds : 1710306377, 1730402541)
+    # block_ranges = [[127241617, 127241717]] # event 테스트
     # Tests
     # Uniswap V3:  6446, 1057969
 

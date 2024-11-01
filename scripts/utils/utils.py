@@ -306,17 +306,19 @@ def get_events(w3, client_version, params, provider, network="ethereum", session
                         "id": 1
                     })
                     if res.status_code == 200:
-                        temp_events = res.json()["result"]
-                        for event in temp_events:
-                            event["address"] =  Web3.toChecksumAddress(event["address"].lower())
-                            event["blockNumber"] = int(event["blockNumber"], 16)
-                            event["transactionIndex"] = int(event["transactionIndex"], 16)
-                            event["logIndex"] = int(event["logIndex"], 16)
-                            events.append(event)
+                        data = res.json()
+                        if "result" in data:
+                            temp_events = data["result"]
 
-                        if toBlock == lastBlock:
-                            break
-                        # return events
+                            for event in temp_events:
+                                event["address"] =  Web3.toChecksumAddress(event["address"].lower())
+                                event["blockNumber"] = int(event["blockNumber"], 16)
+                                event["transactionIndex"] = int(event["transactionIndex"], 16)
+                                event["logIndex"] = int(event["logIndex"], 16)
+                                events.append(event)
+
+                            if toBlock == lastBlock:
+                                break
                     else:
                         print(colors.FAIL+"Error: Could not retrieve events: "+str(res.status_code)+" "+str(res.text)+" "+str(provider.endpoint_uri)+colors.END)
                         return None

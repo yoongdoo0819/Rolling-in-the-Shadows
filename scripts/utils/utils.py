@@ -290,7 +290,7 @@ def get_events(w3, client_version, params, provider, network="ethereum", session
                     if toBlock >= lastBlock:
                         toBlock = lastBlock
 
-                    # print("fromBlock", fromBlock, "toBlock", toBlock, "lastBlock", lastBlock, "toBlock - fromBlock", toBlock - fromBlock)
+                    print("topics", params["topics"], "fromBlock", fromBlock, "toBlock", toBlock, "lastBlock", lastBlock, "toBlock - fromBlock", toBlock - fromBlock)
                     res = session.post(provider.endpoint_uri, json={
                         "jsonrpc": "2.0",
                         "method": "eth_getLogs",

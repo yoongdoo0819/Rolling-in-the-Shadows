@@ -84,8 +84,7 @@ def analyze_block(block_range):
         if len(events) == 0:
             continue
         else:
-            print("block number", block_number)
-            print("events", events)
+            print("processing block number", block_number)
 
         try:
             # Search for Uniswap V2 swaps

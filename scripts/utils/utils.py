@@ -322,6 +322,7 @@ def get_events(w3, client_version, params, provider, network="ethereum", session
                         return None
                     
                     if toBlock == lastBlock:
+                        print("to Block == lastBlock ", chunk)
                         break
 
                     fromBlock = toBlock + 1

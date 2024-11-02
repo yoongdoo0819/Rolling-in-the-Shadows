@@ -258,6 +258,8 @@ def get_events_hash(w3,params):
 
 def get_events(w3, client_version, params, provider, network="ethereum", session=None):
     
+    fromBlock = params["fromBlock"]
+    toBlock = params["toBlock"]
     if ("geth" in client_version.lower() and network != "optimism") or network == "arbitrum":
         try:
             events = w3.eth.filter(params).get_all_entries()
@@ -280,61 +282,44 @@ def get_events(w3, client_version, params, provider, network="ethereum", session
             events = []
             for i in range(0, len(addresses), chunk_size):
                 chunk = addresses[i:i + chunk_size]
-                
-                fromBlock = params["fromBlock"]
-                toBlock = 0
-                lastBlock = params["toBlock"]
-                
-                while True:
-                    toBlock = fromBlock + 50000
 
-                    if toBlock >= lastBlock:
-                        toBlock = lastBlock
+                print("fromBlock", fromBlock, "toBlock", toBlock, "chunk", chunk)
+                res = session.post(provider.endpoint_uri, json={
+                    "jsonrpc": "2.0",
+                    "method": "eth_getLogs",
+                    "params": [
+                        {
+                            "fromBlock": hex(fromBlock),
+                            "toBlock": hex(toBlock),
+                            "topics": params["topics"],
+                            "address": chunk,
+                        }
+                    ],
+                    "id": 1
+                })
+                if res.status_code == 200:
+                    data = res.json()
+                    if "result" in data:
+                        temp_events = data["result"]
 
-                    print("topics", params["topics"], "fromBlock", fromBlock, "toBlock", toBlock, "lastBlock", lastBlock, "toBlock - fromBlock", toBlock - fromBlock)
-                    res = session.post(provider.endpoint_uri, json={
-                        "jsonrpc": "2.0",
-                        "method": "eth_getLogs",
-                        "params": [
-                            {
-                                "fromBlock": hex(fromBlock),
-                                "toBlock": hex(toBlock),
-                                "topics": params["topics"],
-                                "address": chunk,
-                            }
-                        ],
-                        "id": 1
-                    })
-                    if res.status_code == 200:
-                        data = res.json()
-                        if "result" in data:
-                            temp_events = data["result"]
+                        for event in temp_events:
+                            event["address"] =  Web3.toChecksumAddress(event["address"].lower())
+                            event["blockNumber"] = int(event["blockNumber"], 16)
+                            event["transactionIndex"] = int(event["transactionIndex"], 16)
+                            event["logIndex"] = int(event["logIndex"], 16)
+                            events.append(event)
 
-                            for event in temp_events:
-                                event["address"] =  Web3.toChecksumAddress(event["address"].lower())
-                                event["blockNumber"] = int(event["blockNumber"], 16)
-                                event["transactionIndex"] = int(event["transactionIndex"], 16)
-                                event["logIndex"] = int(event["logIndex"], 16)
-                                events.append(event)
+                else:
+                    print(colors.FAIL+"Error: Could not retrieve events: "+str(res.status_code)+" "+str(res.text)+" "+str(provider.endpoint_uri)+colors.END)
+                    return None
 
-                    else:
-                        print(colors.FAIL+"Error: Could not retrieve events: "+str(res.status_code)+" "+str(res.text)+" "+str(provider.endpoint_uri)+colors.END)
-                        return None
-                    
-                    if toBlock == lastBlock:
-                        print("to Block == lastBlock ", chunk)
-                        break
-
-                    fromBlock = toBlock + 1
             return events
         
         except Exception as e:
             print(colors.FAIL+str(traceback.format_exc())+colors.END)
             print(colors.FAIL+"Error: "+str(e)+colors.END)
             return None
-
         
-
     else:
         print(colors.FAIL+"Error: Client/Network is not supported! Supported clients are Geth and Erigon! Supported networks are Ethereum, Optimism, Arbitrum, and zkSync! Client version: "+client_version+colors.END)
         return None

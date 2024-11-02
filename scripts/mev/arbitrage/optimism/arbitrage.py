@@ -43,37 +43,38 @@ BALANCER_FLASH_LOAN = "0x0d7d75e01ab95780d3cd1c8ec0dd6c2ce19e3a20427eec8bf53283b
 
 ETH  = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
 WETH = "0x4200000000000000000000000000000000000006"
+EVENTS_NUM = 1000
 
 def analyze_block(block_range):
     start = time.time()
 
-    fromBlock = block_range[0]
-    lastBlock = block_range[1]
+    from_block = block_range[0]
+    last_block = block_range[1]
     while True:
-        toBlock = fromBlock + 50000
+        to_block = from_block + EVENTS_NUM
 
-        if toBlock >= lastBlock:
-            toBlock = lastBlock
+        if to_block >= last_block:
+            to_block = last_block
             
-        print("Analyzing block range: "+colors.INFO+str(fromBlock)+"-"+str(toBlock)+colors.END)
+        print("Analyzing block range: "+colors.INFO+str(from_block)+"-"+str(to_block)+colors.END)
 
         # Get all the events at once and order them by block
         events_per_block = dict()
         try:
             events = list()
-            events += get_events(w3, client_version, {"fromBlock": fromBlock, "toBlock": toBlock, "topics": [UNISWAP_V2]},  provider, "optimism", session)
-            events += get_events(w3, client_version, {"fromBlock": fromBlock, "toBlock": toBlock, "topics": [UNISWAP_V3]},  provider, "optimism", session)
-            events += get_events(w3, client_version, {"fromBlock": fromBlock, "toBlock": toBlock, "topics": [BALANCER_V1]}, provider, "optimism", session)
-            events += get_events(w3, client_version, {"fromBlock": fromBlock, "toBlock": toBlock, "topics": [BALANCER_V2]}, provider, "optimism", session)
-            events += get_events(w3, client_version, {"fromBlock": fromBlock, "toBlock": toBlock, "topics": [CURVE_1]},     provider, "optimism", session)
-            events += get_events(w3, client_version, {"fromBlock": fromBlock, "toBlock": toBlock, "topics": [CURVE_2]},     provider, "optimism", session)
-            for i in range(fromBlock, toBlock+1):
+            events += get_events(w3, client_version, {"fromBlock": from_block, "toBlock": to_block, "topics": [UNISWAP_V2]},  provider, "optimism", session)
+            events += get_events(w3, client_version, {"fromBlock": from_block, "toBlock": to_block, "topics": [UNISWAP_V3]},  provider, "optimism", session)
+            events += get_events(w3, client_version, {"fromBlock": from_block, "toBlock": to_block, "topics": [BALANCER_V1]}, provider, "optimism", session)
+            events += get_events(w3, client_version, {"fromBlock": from_block, "toBlock": to_block, "topics": [BALANCER_V2]}, provider, "optimism", session)
+            events += get_events(w3, client_version, {"fromBlock": from_block, "toBlock": to_block, "topics": [CURVE_1]},     provider, "optimism", session)
+            events += get_events(w3, client_version, {"fromBlock": from_block, "toBlock": to_block, "topics": [CURVE_2]},     provider, "optimism", session)
+            for i in range(from_block, to_block+1):
                 events_per_block[i] = list()
             for event in events:
                 events_per_block[event["blockNumber"]].append(event)
         except Exception as e:
             print(colors.FAIL+str(traceback.format_exc())+colors.END)
-            print(colors.FAIL+"Error: "+str(e)+" @ block range: "+str(fromBlock)+"-"+str(toBlock)+colors.END)
+            print(colors.FAIL+"Error: "+str(e)+" @ block range: "+str(from_block)+"-"+str(to_block)+colors.END)
             end = time.time()
             return end - start
 
@@ -892,9 +893,9 @@ def analyze_block(block_range):
             # if 'block_number' not in collection.index_information():
             #     collection.create_index('block_number', unique=True)
 
-
-        if toBlock == lastBlock:
-            print("toBlock == lastBlock ")
+        from_block = to_block + 1
+        if to_block == last_block:
+            print("from_block", from_block, "to_block == last_block", to_block, last_block)
             break
 
     end = time.time()
@@ -954,8 +955,8 @@ def main():
             block_range.append(block)
         if counter == BLOCK_RANGE or block == block_range_end:
             block_range.append(block)
-            count = mongo_connection["optimism"]["mev_arbitrage_status"].count_documents({"block_number": {"$gte": fromBlock, "$lte" : toBlock}})
-            if count != toBlock - fromBlock + 1:
+            count = mongo_connection["optimism"]["mev_arbitrage_status"].count_documents({"block_number": {"$gte": from_block, "$lte" : to_block}})
+            if count != to_block - from_block + 1:
                 block_ranges.append(block_range)
             block_range = list()
             counter = 0"""

@@ -257,9 +257,6 @@ def get_events_hash(w3,params):
             return None
 
 def get_events(w3, client_version, params, provider, network="ethereum", session=None):
-    fromBlock = params["fromBlock"]
-    toBlock = 0
-    lastBlock = params["toBlock"]
     
     if ("geth" in client_version.lower() and network != "optimism") or network == "arbitrum":
         try:
@@ -284,6 +281,10 @@ def get_events(w3, client_version, params, provider, network="ethereum", session
             for i in range(0, len(addresses), chunk_size):
                 chunk = addresses[i:i + chunk_size]
                 
+                fromBlock = params["fromBlock"]
+                toBlock = 0
+                lastBlock = params["toBlock"]
+                
                 while True:
                     toBlock = fromBlock + 50000
 
@@ -299,7 +300,6 @@ def get_events(w3, client_version, params, provider, network="ethereum", session
                                 "fromBlock": hex(fromBlock),
                                 "toBlock": hex(toBlock),
                                 "topics": params["topics"],
-                                # UniSwap https://app.uniswap.org/explore/pools/optimism
                                 "address": chunk,
                             }
                         ],
@@ -317,12 +317,13 @@ def get_events(w3, client_version, params, provider, network="ethereum", session
                                 event["logIndex"] = int(event["logIndex"], 16)
                                 events.append(event)
 
-                            if toBlock == lastBlock:
-                                break
                     else:
                         print(colors.FAIL+"Error: Could not retrieve events: "+str(res.status_code)+" "+str(res.text)+" "+str(provider.endpoint_uri)+colors.END)
                         return None
                     
+                    if toBlock == lastBlock:
+                        break
+
                     fromBlock = toBlock + 1
             return events
         

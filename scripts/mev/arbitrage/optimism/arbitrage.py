@@ -43,7 +43,7 @@ BALANCER_FLASH_LOAN = "0x0d7d75e01ab95780d3cd1c8ec0dd6c2ce19e3a20427eec8bf53283b
 
 ETH  = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
 WETH = "0x4200000000000000000000000000000000000006"
-EVENTS_NUM = 1000
+EVENTS_NUM = 50000
 
 def analyze_block(block_range):
     start = time.time()
@@ -893,7 +893,10 @@ def analyze_block(block_range):
             # if 'block_number' not in collection.index_information():
             #     collection.create_index('block_number', unique=True)
 
+        with open("log.txt", "a") as file:
+                file.write("from_block " + str(from_block) + " to_block " + str(to_block)) 
         from_block = to_block + 1
+        
         if to_block == last_block:
             print("from_block", from_block, "to_block == last_block", to_block, last_block)
             break
@@ -1033,7 +1036,7 @@ def main():
     print(block_ranges)
     print(len(block_ranges))
 
-    block_ranges = [[117400000, 125400000]] # 덴쿤 이후 (seconds : 1710306377, 1730402541)
+    block_ranges = [[117562015, 125400000]] # 덴쿤 이후 (seconds : 1710306377, 1730402541)
     # block_ranges = [[127241617, 127241717]] # event 테스트
     # Tests
     # Uniswap V3:  6446, 1057969

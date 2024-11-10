@@ -47,9 +47,11 @@ EVENTS_NUM = 50000
 
 def analyze_block(block_range):
     start = time.time()
-
+    
     from_block = block_range[0]
     last_block = block_range[1]
+    BLOCK_RANGE_INDEX = block_range[2]
+
     while True:
         to_block = from_block + EVENTS_NUM
 
@@ -850,7 +852,7 @@ def analyze_block(block_range):
                                     "flash_loans": arbitrage_flash_loans
                                 }
 
-                                collection = mongo_connection["optimism"]["mev_arbitrage_results"]
+                                collection = mongo_connection["optimism"]["mev_arbitrage_results"+BLOCK_RANGE_INDEX]
                                 try:
                                     if DEBUG_MODE:
                                         import pprint
@@ -893,10 +895,10 @@ def analyze_block(block_range):
             # if 'block_number' not in collection.index_information():
             #     collection.create_index('block_number', unique=True)
 
-        with open("log.txt", "a") as file:
-                file.write("from_block " + str(from_block) + " to_block " + str(to_block)) 
+        with open("log" + BLOCK_RANGE_INDEX + ".txt", "a") as file:
+                file.write("from_block " + str(from_block) + " to_block " + str(to_block) + "\n") 
         from_block = to_block + 1
-        
+
         if to_block == last_block:
             print("from_block", from_block, "to_block == last_block", to_block, last_block)
             break
@@ -931,22 +933,42 @@ def init_process(_prices, _coin_list, _cache):
     mongo_connection = pymongo.MongoClient("mongodb://"+MONGO_HOST+":"+str(MONGO_PORT), maxPoolSize=None)
     session = requests.Session()
 
+def read_last_line(file_path):
+    try:
+        with open(file_path, 'rb') as f:  # 바이너리 모드로 열기
+            f.seek(-2, 2)  # 파일의 끝에서 두 번째 바이트로 이동
+            while f.read(1) != b'\n':  # 이전 줄로 이동할 때까지 탐색
+                f.seek(-2, 1)
+            last_line = f.readline().decode()  # 마지막 줄을 디코딩하여 문자열로 변환
+
+        # 마지막 줄에서 마지막 단어 추출
+        last_word = last_line.strip().split()[-1]
+    except FileNotFoundError:
+        print("Error: 파일 존재하지 않습니다")
+        return 0
+    return int(last_word)
 
 def main():
     global CPUs
     global DEBUG_MODE
 
     if len(sys.argv) != 2:
-        print(colors.FAIL+"Error: Please provide a block range to be analyzed: 'python3 "+sys.argv[0]+" <BLOCK_RANGE_START>:<BLOCK_RANGE_END>'"+colors.END)
+        print(colors.FAIL+"Error: block range number'"+colors.END)
         sys.exit(-1)
-    if not ":" in sys.argv[1]:
-        print(colors.FAIL+"Error: Please provide a valid block range: 'python3 "+sys.argv[0]+" <BLOCK_RANGE_START>:<BLOCK_RANGE_END>'"+colors.END)
-        sys.exit(-2)
-    block_range_start, block_range_end = sys.argv[1].split(":")[0], sys.argv[1].split(":")[1]
-    if not block_range_start.isnumeric() or not block_range_end.isnumeric():
-        print(colors.FAIL+"Error: Please provide integers as block range: 'python3 "+sys.argv[0]+" <BLOCK_RANGE_START>:<BLOCK_RANGE_END>'"+colors.END)
-        sys.exit(-3)
-    block_range_start, block_range_end = int(block_range_start), int(block_range_end)
+    # if len(sys.argv) != 2:
+    #     print(colors.FAIL+"Error: Please provide a block range to be analyzed: 'python3 "+sys.argv[0]+" <BLOCK_RANGE_START>:<BLOCK_RANGE_END>'"+colors.END)
+    #     sys.exit(-1)
+    # if not ":" in sys.argv[1]:
+    #     print(colors.FAIL+"Error: Please provide a valid block range: 'python3 "+sys.argv[0]+" <BLOCK_RANGE_START>:<BLOCK_RANGE_END>'"+colors.END)
+    #     sys.exit(-2)
+    # block_range_start, block_range_end = sys.argv[1].split(":")[0], sys.argv[1].split(":")[1]
+    # if not block_range_start.isnumeric() or not block_range_end.isnumeric():
+    #     print(colors.FAIL+"Error: Please provide integers as block range: 'python3 "+sys.argv[0]+" <BLOCK_RANGE_START>:<BLOCK_RANGE_END>'"+colors.END)
+    #     sys.exit(-3)
+    # block_range_start, block_range_end = int(block_range_start), int(block_range_end)
+
+    BLOCK_RANGE_INDEX = sys.argv[1]
+    print("Block Range Index", BLOCK_RANGE_INDEX)
 
     """counter = 0
     block_range = list()
@@ -1036,7 +1058,31 @@ def main():
     print(block_ranges)
     print(len(block_ranges))
 
-    block_ranges = [[117562015, 125400000]] # 덴쿤 이후 (seconds : 1710306377, 1730402541)
+    divided_block_ranges = [
+        [119525324, 120500000],
+        [120500001, 121500000],
+        [121500001, 122500000],
+        [122500001, 123500000],
+        [123500001, 124500000],
+        [124500001, 125400000]
+    ]
+    last_block_default = divided_block_ranges[int(BLOCK_RANGE_INDEX)][0]
+    last_block_db, last_block_file = 0, 0
+    last_block = 0
+
+    result = mongo_connection["optimism"]["mev_arbitrage_results"+BLOCK_RANGE_INDEX].find_one(sort=[("block_number", -1)])
+    if not result:
+        print("Error: no result mongodb block_number")
+    else:
+        last_block_db = result["block_number"]
+
+    last_block_file = read_last_line("log" + BLOCK_RANGE_INDEX +".txt")
+    
+    last_block = max(last_block_default, last_block_db, last_block_file)
+    print(last_block_default, last_block_db, last_block_file, last_block)
+
+    print("from_block", last_block, "to_block", divided_block_ranges[int(BLOCK_RANGE_INDEX)][1])
+    block_ranges = [[last_block, divided_block_ranges[int(BLOCK_RANGE_INDEX)][1], BLOCK_RANGE_INDEX]] # 덴쿤 이후 (seconds : 1710306377, 1730402541)
     # block_ranges = [[127241617, 127241717]] # event 테스트
     # Tests
     # Uniswap V3:  6446, 1057969

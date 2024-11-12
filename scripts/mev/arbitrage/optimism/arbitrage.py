@@ -852,7 +852,7 @@ def analyze_block(block_range):
                                     "flash_loans": arbitrage_flash_loans
                                 }
 
-                                collection = mongo_connection["optimism"]["mev_arbitrage_results"+BLOCK_RANGE_INDEX]
+                                collection = mongo_connection["optimism"]["mev_arbitrage_results_final"+BLOCK_RANGE_INDEX]
                                 try:
                                     if DEBUG_MODE:
                                         import pprint
@@ -1059,18 +1059,22 @@ def main():
     print(len(block_ranges))
 
     divided_block_ranges = [
-        [119525324, 120500000],
-        [120500001, 121500000],
-        [121500001, 122500000],
-        [122500001, 123500000],
-        [123500001, 124500000],
-        [124500001, 125400000]
+        [117400000, 118200000],
+        [118200001, 119000000],
+        [119000001, 119800000],
+        [119800001, 120600000],
+        [120600001, 121400000],
+        [121400001, 122200000]
+        [122200001, 123000000],
+        [123000001, 123800000],
+        [123800001, 124600000],
+        [124600001, 125400000],
     ]
     last_block_default = divided_block_ranges[int(BLOCK_RANGE_INDEX)][0]
     last_block_db, last_block_file = 0, 0
     last_block = 0
 
-    result = mongo_connection["optimism"]["mev_arbitrage_results"+BLOCK_RANGE_INDEX].find_one(sort=[("block_number", -1)])
+    result = mongo_connection["optimism"]["mev_arbitrage_results_final"+BLOCK_RANGE_INDEX].find_one(sort=[("block_number", -1)])
     if not result:
         print("Error: no result mongodb block_number")
     else:

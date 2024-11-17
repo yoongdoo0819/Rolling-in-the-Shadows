@@ -413,7 +413,7 @@ def get_coin_list(platform, update_prices=False):
 def get_prices(platform, update_prices=False):
     coin_list = get_coin_list(platform, update_prices)
     print("Fetching latest prices from "+colors.INFO+"CoinGecko.com..."+colors.END)
-    from_timestamp = str(1710306377) # str(1577833200) # Wed Jan 01 2020 00:00:00 GMT+0100 (Central European Standard Time)
+    from_timestamp = str(1708869576) # str(1577833200) # Wed Jan 01 2020 00:00:00 GMT+0100 (Central European Standard Time)
     to_timestamp = str(1730402541) #str(int(time.time()))
     time.time()
     prices = dict()

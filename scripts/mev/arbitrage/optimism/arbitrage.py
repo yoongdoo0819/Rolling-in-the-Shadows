@@ -26,7 +26,7 @@ CPUs = multiprocessing.cpu_count()
 
 BLOCK_RANGE = 1#100
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 # Decentralized Exchanges
 UNISWAP_V2          = "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822" # UNISWAP V2/Sushiswap (Swap)
@@ -95,8 +95,6 @@ def analyze_block(block_range):
             events = events_per_block[block_number]
             if len(events) == 0:
                 continue
-            else:
-                print("processing block number", block_number)
 
             try:
                 # Search for Uniswap V2 swaps
@@ -402,14 +400,6 @@ def analyze_block(block_range):
                 end = time.time()
                 return end - start
 
-            # latest_block = w3.eth.getBlock('latest')
-            # print("latest_block", latest_block)
-            # if block_number <= latest_block.number:
-            #     block = w3.eth.getBlock(block_number)
-            #     one_eth_to_usd_price = decimal.Decimal(float(get_price_from_timestamp(block["timestamp"], prices["eth_to_usd"])))
-            #     print(block)
-            # else:
-            #     print("해당 블록은 아직 생성되지 않았습니다.")
             
             block = w3.eth.getBlock(block_number)
             one_eth_to_usd_price = decimal.Decimal(float(get_price_from_timestamp(block["timestamp"], prices["eth_to_usd"])))
@@ -549,7 +539,6 @@ def analyze_block(block_range):
                                     arbitrages.append(arbitrage)
                                     intermediary_swaps = list()
                             if len(arbitrages) > 0:
-                                print("arbitrages len > 0")
                                 if not retrieved_flash_loans:
                                     events = list()
                                     events += get_events(w3, client_version, {"fromBlock": block_number, "toBlock": block_number, "topics": [AAVE_V2_FLASH_LOAN]},  provider, "optimism", session)
@@ -1064,7 +1053,7 @@ def main():
         [119000001, 119800000],
         [119800001, 120600000],
         [120600001, 121400000],
-        [121400001, 122200000]
+        [121400001, 122200000],
         [122200001, 123000000],
         [123000001, 123800000],
         [123800001, 124600000],
@@ -1087,7 +1076,7 @@ def main():
 
     print("from_block", last_block, "to_block", divided_block_ranges[int(BLOCK_RANGE_INDEX)][1])
     block_ranges = [[last_block, divided_block_ranges[int(BLOCK_RANGE_INDEX)][1], BLOCK_RANGE_INDEX]] # 덴쿤 이후 (seconds : 1710306377, 1730402541)
-    # block_ranges = [[127241617, 127241717]] # event 테스트
+    # block_ranges = [[117400000, 125400000, BLOCK_RANGE_INDEX]] # event 테스트
     # Tests
     # Uniswap V3:  6446, 1057969
 

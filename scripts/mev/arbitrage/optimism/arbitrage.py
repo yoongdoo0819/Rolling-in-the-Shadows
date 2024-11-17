@@ -26,7 +26,7 @@ CPUs = multiprocessing.cpu_count()
 
 BLOCK_RANGE = 1#100
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 # Decentralized Exchanges
 UNISWAP_V2          = "0xd78ad95fa46c994b6551d0da85fc275fe613ce37657fb8d5e3d130840159d822" # UNISWAP V2/Sushiswap (Swap)
@@ -843,9 +843,9 @@ def analyze_block(block_range):
 
                                 collection = mongo_connection["optimism"]["mev_arbitrage_results_final"+BLOCK_RANGE_INDEX]
                                 try:
-                                    if DEBUG_MODE:
-                                        import pprint
-                                        print(">> ", finding)
+                                    # if DEBUG_MODE:
+                                        # import pprint
+                                        # print(">> ", finding)
                                     collection.insert_one(finding)
                                 except pymongo.errors.DuplicateKeyError:
                                     pass

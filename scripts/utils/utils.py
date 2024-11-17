@@ -343,7 +343,7 @@ def get_events(w3, client_version, params, provider, network="ethereum", session
             for i in range(0, len(addresses), chunk_size):
                 chunk = addresses[i:i + chunk_size]
 
-                print("fromBlock", fromBlock, "toBlock", toBlock, "chunk", chunk)
+                # print("fromBlock", fromBlock, "toBlock", toBlock, "chunk", chunk)
                 res = session.post(provider.endpoint_uri, json={
                     "jsonrpc": "2.0",
                     "method": "eth_getLogs",

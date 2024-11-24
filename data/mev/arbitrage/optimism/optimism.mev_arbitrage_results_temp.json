@@ -1,0 +1,145 @@
+[{
+  "_id": {
+    "$oid": "65d5e22da8e23eec5b297375"
+  },
+  "id": "661c87c48155b8a726002c6b6a7dd78e3cd91ce5144148789deb2d010aab9d4e",
+  "block_number": 66845008,
+  "block_timestamp": 1673742592,
+  "miner": "0x0000000000000000000000000000000000000000",
+  "transaction": {
+    "from": "0xf37e29d7DaF0822003ae68fF403b6aF33ADD43b3",
+    "gas": 14999998,
+    "gasPrice": 1000000,
+    "hash": "0xabe1a9e87f66f1cc27ae2185dc0d69b468d6a11c1426a605cd84d1b7ba55b57e",
+    "input": "0x",
+    "nonce": 27242,
+    "to": "0x306D9a7CC21565F3DF669327205c7e681aDDd37F",
+    "transactionIndex": 0,
+    "value": "7",
+    "queueOrigin": "sequencer",
+    "l1TxOrigin": null,
+    "l1BlockNumber": "0xfa600b",
+    "l1Timestamp": "0x63c34900",
+    "index": "0x3fbf94f",
+    "queueIndex": null,
+    "rawTransaction": "0xf865826a6a830f424083e4e1be94306d9a7cc21565f3df669327205c7e681addd37f078038a03986f1c1cd04a9dc87fad6c9f53d80e75e738d1771c3026bb2469b54f1052d3aa04653aebb230da8f89e718e77f6e456496a16d5387f4481d12b300625735209dd"
+  },
+  "arbitrages": [
+    {
+      "swaps": [
+        {
+          "index": 3,
+          "in_token": "0x4200000000000000000000000000000000000006",
+          "in_token_name": "Wrapped Ether",
+          "out_token": "0x4200000000000000000000000000000000000042",
+          "out_token_name": "Optimism",
+          "in_amount": "10368965966444288",
+          "out_amount": "9329841973423555257",
+          "exchange": "0xFC1f3296458F9b2a27a0B91dd7681C4020E09D05",
+          "protocol_name": "Uniswap V3"
+        },
+        {
+          "index": 6,
+          "in_token": "0x4200000000000000000000000000000000000042",
+          "in_token_name": "Optimism",
+          "out_token": "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
+          "out_token_name": "Tether USD",
+          "in_amount": "9329841973423555257",
+          "out_amount": "16003115",
+          "exchange": "0xB2Ac2E5A3684411254d58B1C5A542212b782114D",
+          "protocol_name": "Uniswap V3"
+        },
+        {
+          "index": 11,
+          "in_token": "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
+          "in_token_name": "Tether USD",
+          "out_token": "0x7F5c764cBc14f9669B88837ca1490cCa17c31607",
+          "out_token_name": "USD Coin",
+          "in_amount": "16003115",
+          "out_amount": "16000678",
+          "exchange": "0xe08d427724d8a2673FE0bE3A81b7db17BE835B36",
+          "protocol_name": "Uniswap V2"
+        },
+        {
+          "index": 13,
+          "in_token": "0x7F5c764cBc14f9669B88837ca1490cCa17c31607",
+          "in_token_name": "USD Coin",
+          "out_token": "0x4200000000000000000000000000000000000006",
+          "out_token_name": "Wrapped Ether",
+          "in_amount": "16000000",
+          "out_amount": "10368965966444288",
+          "exchange": "0x85149247691df622eaF1a8Bd0CaFd40BC45154a9",
+          "protocol_name": "Uniswap V3"
+        }
+      ],
+      "token_balance": {
+        "0x4200000000000000000000000000000000000006": {
+          "token_name": "Wrapped Ether",
+          "amount": "0",
+          "decimals": 18,
+          "one_token_to_eth_price": 1.0011102624560433
+        },
+        "0x4200000000000000000000000000000000000042": {
+          "token_name": "Optimism",
+          "amount": "0",
+          "decimals": 18,
+          "one_token_to_eth_price": 0.001111095421322987
+        },
+        "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58": {
+          "token_name": "Tether USD",
+          "amount": "0",
+          "decimals": 6,
+          "one_token_to_eth_price": 0.0006438834617320656
+        },
+        "0x7F5c764cBc14f9669B88837ca1490cCa17c31607": {
+          "token_name": "USD Coin",
+          "amount": "678",
+          "decimals": 6,
+          "one_token_to_eth_price": 0.000638825200374848
+        }
+      },
+      "cost_eth": 0,
+      "cost_usd": 0,
+      "gain_eth": 4.3312348585414696e-7,
+      "gain_usd": 0.0006709565616307504,
+      "profit_eth": 4.3312348585414696e-7,
+      "profit_usd": 0.0006709565616307504
+    }
+  ],
+  "token_balance": {
+    "0x4200000000000000000000000000000000000006": {
+      "amount": "0",
+      "decimals": 18,
+      "one_token_to_eth_price": 1.0011102624560433,
+      "token_name": "Wrapped Ether"
+    },
+    "0x4200000000000000000000000000000000000042": {
+      "amount": "0",
+      "decimals": 18,
+      "one_token_to_eth_price": 0.001111095421322987,
+      "token_name": "Optimism"
+    },
+    "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58": {
+      "amount": "0",
+      "decimals": 6,
+      "one_token_to_eth_price": 0.0006438834617320656,
+      "token_name": "Tether USD"
+    },
+    "0x7F5c764cBc14f9669B88837ca1490cCa17c31607": {
+      "amount": "678",
+      "decimals": 6,
+      "one_token_to_eth_price": 0.000638825200374848,
+      "token_name": "USD Coin"
+    }
+  },
+  "eth_usd_price": 1549.111474081304,
+  "total_cost_eth": 0.000006641399,
+  "total_cost_usd": 0.0102882673948521,
+  "total_gain_eth": 4.3312348585414696e-7,
+  "total_gain_usd": 0.0006709565616307504,
+  "total_profit_eth": -0.000006208275514145853,
+  "total_profit_usd": -0.009617310833221348,
+  "transaction_cost_eth": 0.000006641399,
+  "transaction_cost_usd": 0.0102882673948521,
+  "flash_loans": []
+}]

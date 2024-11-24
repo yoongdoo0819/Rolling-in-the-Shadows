@@ -1012,40 +1012,40 @@ def main():
     print(len(block_ranges))"""
 
     mongo_connection = pymongo.MongoClient("mongodb://"+MONGO_HOST+":"+str(MONGO_PORT), maxPoolSize=None)
-    c = mongo_connection["optimism"]["mev_arbitrage_results_copy"].find({"block_number": {"$lte": 105235062}})
-    a_m = dict()
-    a = set()
-    n = 0
-    for d in c:
-        n += 1
-        a_m[d["transaction"]["hash"]] = d["block_number"]
-        a.add(d["transaction"]["hash"])
-        #if n == 10000:
-        #    break
-    print(n)
-    print(len(a))
-    print(len(a_m))
+    # c = mongo_connection["optimism"]["mev_arbitrage_results_copy"].find({"block_number": {"$lte": 105235062}})
+    # a_m = dict()
+    # a = set()
+    # n = 0
+    # for d in c:
+    #     n += 1
+    #     a_m[d["transaction"]["hash"]] = d["block_number"]
+    #     a.add(d["transaction"]["hash"])
+    #     #if n == 10000:
+    #     #    break
+    # print(n)
+    # print(len(a))
+    # print(len(a_m))
 
-    c = mongo_connection["optimism"]["mev_arbitrage_results"].find({"block_number": {"$lte": 105235062}})
-    b = set()
-    m = 0
-    for d in c:
-        m += 1
-        b.add(d["transaction"]["hash"])
-        #if m == 10000:
-        #    break
-    print(m)
-    print(len(b))
+    # c = mongo_connection["optimism"]["mev_arbitrage_results"].find({"block_number": {"$lte": 105235062}})
+    # b = set()
+    # m = 0
+    # for d in c:
+    #     m += 1
+    #     b.add(d["transaction"]["hash"])
+    #     #if m == 10000:
+    #     #    break
+    # print(m)
+    # print(len(b))
 
-    block_ranges = list()
-    for t in a:
-        if not t in b:
-            print(t)
-            print(a_m[t])
-            if not [a_m[t], a_m[t]] in block_ranges:
-                block_ranges.append([a_m[t], a_m[t]])
-    print(block_ranges)
-    print(len(block_ranges))
+    # block_ranges = list()
+    # for t in a:
+    #     if not t in b:
+    #         print(t)
+    #         print(a_m[t])
+    #         if not [a_m[t], a_m[t]] in block_ranges:
+    #             block_ranges.append([a_m[t], a_m[t]])
+    # print(block_ranges)
+    # print(len(block_ranges))
 
     divided_block_ranges = [
         [117400000, 117800000], # 0

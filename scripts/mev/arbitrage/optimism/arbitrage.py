@@ -43,7 +43,7 @@ BALANCER_FLASH_LOAN = "0x0d7d75e01ab95780d3cd1c8ec0dd6c2ce19e3a20427eec8bf53283b
 
 ETH  = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
 WETH = "0x4200000000000000000000000000000000000006"
-EVENTS_NUM = 50000
+EVENTS_NUM = 1000
 
 def analyze_block(block_range):
     start = time.time()

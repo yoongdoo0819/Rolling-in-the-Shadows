@@ -5,7 +5,7 @@ from web3 import Web3
 
 ETHEREUM_PROVIDER = Web3.HTTPProvider("https://ethereum-rpc.publicnode.com", request_kwargs={'timeout': 60})
 ARBITRUM_PROVIDER = Web3.HTTPProvider("https://arbitrum-one-rpc.publicnode.com", request_kwargs={'timeout': 60})
-OPTIMISM_PROVIDER = Web3.HTTPProvider("https://optimism-rpc.publicnode.com", request_kwargs={'timeout': 60})
+OPTIMISM_PROVIDER = Web3.HTTPProvider("https://opt-mainnet.g.alchemy.com/v2/oz_Ce1qIL7VlhyvFnkAGdncLsjW0BnAE", request_kwargs={'timeout': 60})
 ZKSYNC_PROVIDER   = Web3.HTTPProvider("https://mainnet.era.zksync.io",  request_kwargs={'timeout': 60})
 
 ETHEREUM_SEPOLIA_PROVIDER = Web3.HTTPProvider("https://ethereum-sepolia-rpc.publicnode.com", request_kwargs={'timeout': 60})

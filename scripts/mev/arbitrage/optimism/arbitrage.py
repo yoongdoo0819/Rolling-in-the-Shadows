@@ -896,7 +896,7 @@ def analyze_block(block_range):
     return end - start
 
 
-def init_process(_prices, _coin_list, _cache):
+def init_process(_prices, _coin_list, _cache, _provider_index):
     global provider
     global w3
     global client_version
@@ -907,7 +907,8 @@ def init_process(_prices, _coin_list, _cache):
     global session
 
     import random
-    provider = OPTIMISM_PROVIDER # random.choice(OPTIMISM_PROVIDERS)
+    provider = OPTIMISM_PROVIDER[int(_provider_index)] # random.choice(OPTIMISM_PROVIDERS)
+    print(provider)
     w3 = Web3(provider)
     if w3.isConnected():
         client_version = w3.clientVersion
@@ -941,8 +942,8 @@ def main():
     global CPUs
     global DEBUG_MODE
 
-    if len(sys.argv) != 2:
-        print(colors.FAIL+"Error: block range number'"+colors.END)
+    if len(sys.argv) != 3:
+        print(colors.FAIL+"Error: block range number and provider"+colors.END)
         sys.exit(-1)
     # if len(sys.argv) != 2:
     #     print(colors.FAIL+"Error: Please provide a block range to be analyzed: 'python3 "+sys.argv[0]+" <BLOCK_RANGE_START>:<BLOCK_RANGE_END>'"+colors.END)
@@ -957,7 +958,9 @@ def main():
     # block_range_start, block_range_end = int(block_range_start), int(block_range_end)
 
     BLOCK_RANGE_INDEX = sys.argv[1]
+    PROVIDER_INDEX = sys.argv[2]
     print("Block Range Index", BLOCK_RANGE_INDEX)
+    print("Service Provider Index", PROVIDER_INDEX)
 
     """counter = 0
     block_range = list()
@@ -1102,7 +1105,7 @@ def main():
         CPUs = 1
     print("Running detection of arbitrage with "+colors.INFO+str(CPUs)+colors.END+" CPUs")
     print("Initializing workers...")
-    with multiprocessing.Pool(processes=CPUs, initializer=init_process, initargs=(prices, coin_list, cache, )) as pool:
+    with multiprocessing.Pool(processes=CPUs, initializer=init_process, initargs=(prices, coin_list, cache, PROVIDER_INDEX, )) as pool:
         start_total = time.time()
         execution_times += pool.map(analyze_block, block_ranges)
         end_total = time.time()

@@ -187,13 +187,23 @@ def analyze_block(block_range):
                             {"inputs":[],"name":"token1","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}
                         ])
                         if not event["address"]+":token0" in cache:
-                            _token0 = exchange_contract.functions.token0().call()
-                            cache[event["address"]+":token0"] = _token0
+                            try:
+                                _token0 = exchange_contract.functions.token0().call()
+                                cache[event["address"]+":token0"] = _token0
+                            except:
+                                _token0 = None
+                                cache[event["address"]+":token0"] = _token0
                         _token0 = cache[event["address"]+":token0"]
                         if not event["address"]+":token1" in cache:
-                            _token1 = exchange_contract.functions.token1().call()
-                            cache[event["address"]+":token1"] = _token1
+                            try:
+                                _token1 = exchange_contract.functions.token1().call()
+                                cache[event["address"]+":token1"] = _token1
+                            except:
+                                _token1 = None
+                                cache[event["address"]+":token1"] = _token1
                         _token1 = cache[event["address"]+":token1"]
+                        if _token0 == None or _token1 == None:
+                            continue
                         if _amount0 < 0:
                             amount_in  = _amount1
                             amount_out = abs(_amount0)
